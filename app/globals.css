@@ -121,12 +121,6 @@ body::before {
   height: 2px;
 }
 
-/* Explicit aspect ratio on video containers to prevent CLS */
-.video-container {
-  aspect-ratio: 16 / 9;
-  container-type: inline-size;
-}
-
 /* Explicit size on image containers to prevent CLS */
 .image-example {
   contain: layout;
@@ -534,7 +528,7 @@ code {
    Mobile Overlay & Sidebar
 ───────────────────────────────────────────── */
 .mobile-menu-overlay {
-  display: none;
+  display: none; /* başlangıç durumu — body.mobile-menu-open ile görünür olur */
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.6);
   backdrop-filter: blur(2px);
@@ -564,6 +558,7 @@ body.mobile-menu-open { overflow: hidden; }
   gap: var(--sp-6);
 }
 body.mobile-menu-open .mobile-sidebar-nav { right: 0; }
+.mobile-sidebar-nav.is-open { right: 0; }
 
 .mobile-sidebar-nav .close-btn {
   position: absolute;
@@ -1532,23 +1527,50 @@ body.mobile-menu-open .mobile-sidebar-nav { right: 0; }
 /* ─────────────────────────────────────────────
    Responsive
 ───────────────────────────────────────────── */
+
+/* ── Tablet (1024px) ─────────────────────── */
 @media (max-width: 1024px) {
   .content-grid { grid-template-columns: 1fr; }
   .desktop-sidebar { display: none; }
   .main-article-area { max-width: 100%; }
   .main-nav, .search-bar { display: none !important; }
+  .cp-trigger { display: none !important; }
   .hamburger-menu-btn { display: flex !important; }
+
+  /* TOC tablet görünümü */
+  .toc-mobile-bar { display: block; }
+  .toc-desktop { display: none; }
 }
 
+/* ── Mobil (768px) ───────────────────────── */
 @media (max-width: 768px) {
   :root { --header-h: 52px; }
+
+  /* Layout */
   .container { padding: 0 var(--sp-4); }
-  .main-content-wrapper { padding: var(--sp-8) 0; }
+  .main-content-wrapper { padding: var(--sp-6) 0; }
 
-  .guide-hero { margin-bottom: var(--sp-8); padding-bottom: var(--sp-8); }
-  .guide-hero h1 { font-size: var(--text-2xl); }
-  .guide-hero .hero-lead { font-size: var(--text-base); }
+  /* Hero */
+  .guide-hero {
+    margin-bottom: var(--sp-6);
+    padding-bottom: var(--sp-6);
+  }
+  .guide-hero h1 {
+    font-size: clamp(1.4rem, 6vw, 1.75rem);
+    line-height: 1.25;
+  }
+  .guide-hero .hero-lead {
+    font-size: var(--text-base);
+    line-height: 1.65;
+  }
+  .hero-badge { font-size: var(--text-xs); }
+  .hero-meta {
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .hero-meta-item { font-size: var(--text-xs); }
 
+  /* Başlıklar */
   .section-title { font-size: var(--text-xl); }
   .subsection-title {
     font-size: var(--text-lg);
@@ -1556,17 +1578,28 @@ body.mobile-menu-open .mobile-sidebar-nav { right: 0; }
     margin-top: var(--sp-8);
   }
 
+  /* İçerik metni */
+  p { max-width: 100%; }
+  .guide-section { padding: var(--sp-6) 0; }
+
+  /* Kaynaklar */
   .resources-section ul li {
     flex-direction: column; gap: var(--sp-2);
   }
   .resources-section ul li a { white-space: normal; }
 
+  /* Sayfalama */
   .pagination-buttons { flex-direction: column; }
   .pagination-buttons a { justify-content: center; }
 
-  .faq-question { padding: var(--sp-4) var(--sp-5); }
+  /* FAQ */
+  .faq-question {
+    padding: var(--sp-4) var(--sp-5);
+    min-height: 48px; /* touch target */
+  }
   .faq-answer-inner { padding-left: var(--sp-5); }
 
+  /* Progress panel — tam ekran çekmece */
   .progress-panel {
     right: -100%; top: 0;
     transform: none; height: 100vh;
@@ -1576,23 +1609,138 @@ body.mobile-menu-open .mobile-sidebar-nav { right: 0; }
     width: 88vw; max-width: 340px;
     height: 100vh; border-radius: 0;
   }
-  .progress-panel-toggle { left: -36px; width: 36px; height: 36px; }
+  .progress-panel-toggle {
+    left: -44px;
+    width: 44px; height: 44px; /* touch target */
+  }
 
-  .theme-toggle { bottom: calc(var(--sp-4) + 40px + var(--sp-2) + 40px + var(--sp-2)); right: var(--sp-4); }
-  .social-share-fab { bottom: calc(var(--sp-4) + 40px + var(--sp-2)); right: var(--sp-4); }
-  #scrollToTopBtn { bottom: var(--sp-4); right: var(--sp-4); }
+  /* ── FAB yığını (yukarıdan: scroll, share, theme, stats) */
+  #scrollToTopBtn {
+    bottom: var(--sp-4);
+    right: var(--sp-4);
+    width: 44px; height: 44px;
+  }
+  .social-share-fab {
+    bottom: calc(var(--sp-4) + 44px + var(--sp-2));
+    right: var(--sp-4);
+  }
+  .social-share-fab .share-main-btn {
+    width: 44px; height: 44px;
+  }
+  .theme-toggle {
+    bottom: calc(var(--sp-4) + 44px + var(--sp-2) + 44px + var(--sp-2));
+    right: var(--sp-4);
+    width: 44px; height: 44px;
+  }
+  .stats-fab {
+    bottom: calc(var(--sp-4) + 44px + var(--sp-2) + 44px + var(--sp-2) + 44px + var(--sp-2));
+    right: var(--sp-4);
+    width: 44px; height: 44px;
+  }
 
-  input[type="search"], input[type="text"] { font-size: 16px; }
+  /* Header hamburger */
+  .hamburger-menu-btn {
+    width: 44px; height: 44px;
+    min-width: 44px;
+  }
+
+  /* Mobil menü kapat butonu */
+  .close-btn {
+    width: 44px !important; height: 44px !important;
+  }
+  .mobile-sidebar-nav ul li a {
+    min-height: 44px;
+    padding: var(--sp-3) var(--sp-4);
+    display: flex; align-items: center;
+  }
+
+  /* Stats paneli mobil */
+  .stats-panel {
+    bottom: var(--sp-4);
+    right: var(--sp-4);
+    left: var(--sp-4);
+    width: auto;
+    max-width: 100%;
+  }
+  .stats-close {
+    width: 36px; height: 36px;
+    min-width: 36px;
+  }
+  .stats-tab {
+    padding: var(--sp-2) var(--sp-3);
+    font-size: var(--text-xs);
+    min-height: 40px;
+  }
+
+  /* Devam et çubuğu */
+  .continue-reading-bar {
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-4);
+    font-size: var(--text-xs);
+  }
+  .continue-btn {
+    font-size: var(--text-xs);
+    padding: var(--sp-2) var(--sp-3);
+    min-height: 36px;
+  }
+
+  /* Bildirim */
+  .notification {
+    right: var(--sp-3);
+    left: var(--sp-3);
+    min-width: unset;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* Input zoom önleme (iOS) */
+  input[type="search"],
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    font-size: 16px;
+  }
 }
 
+/* ── Küçük Mobil (480px) ─────────────────── */
 @media (max-width: 480px) {
   .container { padding: 0 var(--sp-3); }
+
+  /* Hero çok küçük ekran */
+  .guide-hero h1 { font-size: clamp(1.25rem, 7vw, 1.5rem); }
+
+  /* FAQ */
   .faq-question { padding: var(--sp-3) var(--sp-4); }
-  .faq-answer-inner { padding-left: var(--sp-4); padding-right: var(--sp-4); }
+  .faq-answer-inner {
+    padding-left: var(--sp-4);
+    padding-right: var(--sp-4);
+  }
+
+  /* Kaynaklar */
   .resources-section { padding: var(--sp-4); }
-  .main-footer .container { flex-direction: column; align-items: flex-start; gap: var(--sp-3); }
+
+  /* Footer */
+  .main-footer .container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-3);
+  }
   .main-footer ul { flex-wrap: wrap; gap: var(--sp-4); }
+
+  /* Rozet ızgarası */
   .achievement-badges { grid-template-columns: 1fr 1fr; }
+
+  /* Görsel açıklaması */
+  .video-caption { font-size: var(--text-xs); }
+  .image-caption { font-size: var(--text-xs); }
+
+  /* Stats paneli tam ekran */
+  .stats-panel {
+    bottom: 0; left: 0; right: 0;
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    max-height: 70vh;
+  }
 }
 
 /* ─────────────────────────────────────────────
@@ -1906,8 +2054,8 @@ body.mobile-menu-open .mobile-sidebar-nav { right: 0; }
 }
 .zoom-close {
   position: absolute;
-  top: -16px; right: -16px;
-  width: 32px; height: 32px;
+  top: var(--sp-2); right: var(--sp-2);
+  width: 40px; height: 40px;
   background: var(--bg-3);
   border: 1px solid var(--bd-3);
   border-radius: 50%;

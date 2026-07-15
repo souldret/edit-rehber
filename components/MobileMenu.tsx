@@ -56,10 +56,9 @@ export default function MobileMenu() {
 
       {/* Sidebar */}
       <nav
-        className="mobile-sidebar-nav"
+        className={`mobile-sidebar-nav${isOpen ? " is-open" : ""}`}
         role="navigation"
         aria-label="Mobil menü"
-        style={{ right: isOpen ? "0" : "-100%" }}
       >
         <button
           className="close-btn"
