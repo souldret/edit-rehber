@@ -62,7 +62,7 @@ export default function CommandPalette() {
     const handler = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "k") {
         e.preventDefault();
-        open ? closePalette() : openPalette();
+        if (open) { closePalette(); } else { openPalette(); }
       }
       if (e.key === "Escape" && open) closePalette();
     };
@@ -123,10 +123,7 @@ export default function CommandPalette() {
       <div
         className="cp-modal"
         onClick={(e) => e.stopPropagation()}
-        role="combobox"
-        aria-expanded="true"
-        aria-haspopup="listbox"
-        aria-owns="cp-listbox"
+        role="dialog"
         aria-label="Rehberde ara"
       >
         {/* Search input */}
