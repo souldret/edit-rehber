@@ -24,14 +24,10 @@ export function showToast(message: string, type: ToastType = "success"): void {
   el.appendChild(span);
   document.body.appendChild(el);
 
-  const timer = setTimeout(() => {
+  window.setTimeout(() => {
     el.classList.remove("show");
-    const removeTimer = setTimeout(() => {
-      if (el.parentNode) el.parentNode.removeChild(el);
+    window.setTimeout(() => {
+      el.remove();
     }, 400);
-    return () => clearTimeout(removeTimer);
   }, 2500);
-
-  // cleanup ref for SSR safety
-  return void timer;
 }

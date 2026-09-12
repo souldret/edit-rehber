@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { SECTIONS, searchSections, type Section } from "@/lib/sections";
+import { searchSections, type Section } from "@/lib/sections";
 import { addRecentSection } from "@/lib/storage";
-import { showToast } from "@/lib/toast";
 
 const LEVEL_COLOR: Record<string, string> = {
   "Başlangıç": "#4ade80",
@@ -57,7 +56,7 @@ export default function CommandPalette() {
     [closePalette]
   );
 
-  // Ctrl+K / Cmd+K shortcut
+  // Ctrl+K / Cmd+K shortcut + mobile search event
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "k") {
@@ -66,8 +65,13 @@ export default function CommandPalette() {
       }
       if (e.key === "Escape" && open) closePalette();
     };
+    const openFromEvent = () => openPalette();
     document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
+    window.addEventListener("open-command-palette", openFromEvent);
+    return () => {
+      document.removeEventListener("keydown", handler);
+      window.removeEventListener("open-command-palette", openFromEvent);
+    };
   }, [open, openPalette, closePalette]);
 
   // Arrow key navigation
@@ -76,7 +80,7 @@ export default function CommandPalette() {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setSelected((s) => Math.min(s + 1, results.length - 1));
+        setSelected((s) => Math.min(s + 1, Math.max(results.length - 1, 0)));
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
         setSelected((s) => Math.max(s - 1, 0));
@@ -113,18 +117,13 @@ export default function CommandPalette() {
   }
 
   return (
-    <div
-      className="cp-backdrop"
-      onClick={closePalette}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Komut Paleti"
-    >
+    <div className="cp-backdrop" onClick={closePalette}>
       <div
         className="cp-modal"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
-        aria-label="Rehberde ara"
+        aria-modal="true"
+        aria-label="Komut Paleti"
       >
         {/* Search input */}
         <div className="cp-search">
@@ -215,6 +214,3 @@ export default function CommandPalette() {
     </div>
   );
 }
-
-// Re-export for use in MobileMenu
-export { showToast, SECTIONS, searchSections };

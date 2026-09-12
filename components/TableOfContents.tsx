@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { addRecentSection } from "@/lib/storage";
 
 interface TocItem {
   id: string;
@@ -65,13 +66,7 @@ export default function TableOfContents() {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth" });
     setIsOpen(false);
-    // Save recently viewed
-    try {
-      const raw = localStorage.getItem("recentSections") ?? "[]";
-      const arr: string[] = JSON.parse(raw);
-      const next = [id, ...arr.filter((x) => x !== id)].slice(0, 5);
-      localStorage.setItem("recentSections", JSON.stringify(next));
-    } catch {}
+    addRecentSection(id);
   };
 
   if (items.length === 0) return null;

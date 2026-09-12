@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 interface FAQItem {
   id: string;
   question: string;
-  answer: React.ReactNode;
+  answer: ReactNode;
 }
 
 const faqItems: FAQItem[] = [

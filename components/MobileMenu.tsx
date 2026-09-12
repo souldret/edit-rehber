@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 
+const NESTED_SUBMENUS = new Set(["indirme"]);
+
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenus, setOpenSubmenus] = useState<Set<string>>(new Set());
@@ -24,9 +26,13 @@ export default function MobileMenu() {
       const next = new Set(prev);
       if (next.has(id)) {
         next.delete(id);
+        if (id === "videos") next.delete("indirme");
       } else {
-        next.clear();
+        if (!NESTED_SUBMENUS.has(id)) {
+          next.clear();
+        }
         next.add(id);
+        if (id === "indirme") next.add("videos");
       }
       return next;
     });
@@ -35,6 +41,11 @@ export default function MobileMenu() {
   const handleLinkClick = () => {
     setIsOpen(false);
     setOpenSubmenus(new Set());
+  };
+
+  const openCommandPalette = () => {
+    setIsOpen(false);
+    window.dispatchEvent(new Event("open-command-palette"));
   };
 
   return (
@@ -47,7 +58,6 @@ export default function MobileMenu() {
         <i className="fas fa-bars" aria-hidden="true"></i>
       </button>
 
-      {/* Overlay */}
       <div
         className="mobile-menu-overlay"
         onClick={() => setIsOpen(false)}
@@ -137,12 +147,22 @@ export default function MobileMenu() {
         </ul>
 
         {/* Mobile search */}
-        <form className="mobile-search-area" role="search" aria-label="Site içi arama" onSubmit={(e) => e.preventDefault()}>
+        <form
+          className="mobile-search-area"
+          role="search"
+          aria-label="Site içi arama"
+          onSubmit={(e) => {
+            e.preventDefault();
+            openCommandPalette();
+          }}
+        >
           <label htmlFor="mobile-search-input" className="sr-only">Rehberde ara</label>
           <input
             type="search"
             id="mobile-search-input"
             placeholder="Rehberde ara..."
+            onFocus={openCommandPalette}
+            readOnly
           />
           <button type="submit" aria-label="Arama yap">
             <i className="fas fa-search" aria-hidden="true"></i>

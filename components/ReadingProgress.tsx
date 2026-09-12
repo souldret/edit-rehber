@@ -13,6 +13,7 @@ export default function ReadingProgress() {
         setProgress(Math.min(100, (scrolled / total) * 100));
       }
     };
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);

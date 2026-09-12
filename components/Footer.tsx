@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <footer className="main-footer">
       <div className="container">
-        <p>© 2025 Mangaruhu.com - Tüm Hakları Saklıdır.</p>
+        <p>© {new Date().getFullYear()} Mangaruhu.com - Tüm Hakları Saklıdır.</p>
         <ul>
           <li>
             <a href="https://mangaruhu.com/gizlilik-politikasi/">

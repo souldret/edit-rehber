@@ -9,6 +9,7 @@ export default function ScrollToTop() {
     const onScroll = () => {
       setVisible(window.scrollY > 300);
     };
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);

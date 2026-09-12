@@ -49,35 +49,34 @@ export default function ShareButtons() {
       className={`social-share-fab${active ? " active" : ""}`}
       aria-label="Paylaş"
     >
-      {/* Share options */}
-      {active && (
-        <div className="share-options" role="menu" aria-label="Paylaşım seçenekleri">
-          {SHARE_LINKS.map(({ id, label, icon, href }) => (
-            <a
-              key={id}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`share-btn ${id}`}
-              role="menuitem"
-              aria-label={`${label} ile paylaş`}
-              title={`${label} ile Paylaş`}
-              onClick={() => setActive(false)}
-            >
-              <i className={icon} aria-hidden="true" />
-            </a>
-          ))}
-          <button
-            className="share-btn copy-link"
-            onClick={copyLink}
+      <div className="share-options" role="menu" aria-label="Paylaşım seçenekleri">
+        {SHARE_LINKS.map(({ id, label, icon, href }) => (
+          <a
+            key={id}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`share-btn ${id}`}
             role="menuitem"
-            aria-label="Bağlantıyı kopyala"
-            title="Bağlantıyı Kopyala"
+            aria-label={`${label} ile paylaş`}
+            title={`${label} ile Paylaş`}
+            tabIndex={active ? 0 : -1}
+            onClick={() => setActive(false)}
           >
-            <i className="fas fa-link" aria-hidden="true" />
-          </button>
-        </div>
-      )}
+            <i className={icon} aria-hidden="true" />
+          </a>
+        ))}
+        <button
+          className="share-btn copy-link"
+          onClick={copyLink}
+          role="menuitem"
+          aria-label="Bağlantıyı kopyala"
+          title="Bağlantıyı Kopyala"
+          tabIndex={active ? 0 : -1}
+        >
+          <i className="fas fa-link" aria-hidden="true" />
+        </button>
+      </div>
 
       {/* Main toggle */}
       <button

@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
+import type { ReactNode } from "react";
 import { Inter } from "next/font/google";
+import { FAQ_SCHEMA } from "@/lib/faq-schema";
 import "./globals.css";
 
 // ── next/font — zero layout shift, self-hosted ────────────────
@@ -110,7 +112,7 @@ const structuredData = {
         "Manga edit öğrenmek isteyenler için kapsamlı Türkçe rehber.",
       isPartOf: { "@id": "https://mangaruhu.com/#website" },
       inLanguage: "tr-TR",
-      dateModified: new Date().toISOString().split("T")[0],
+      dateModified: "2026-09-12",
     },
     {
       "@type": "WebSite",
@@ -170,32 +172,14 @@ const structuredData = {
     {
       "@type": "FAQPage",
       "@id": "https://mangaruhu.com/manga-rehber/#faqpage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "Manga edit için hangi program en iyidir?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Profesyonel manga editörleri genellikle Adobe Photoshop kullanır. Başlangıç için GIMP (ücretsiz) veya Clip Studio Paint harika alternatiflerdir.",
-          },
+      mainEntity: FAQ_SCHEMA.map((item) => ({
+        "@type": "Question",
+        name: item.name,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.text,
         },
-        {
-          "@type": "Question",
-          name: "Hiç deneyimim yok, nereden başlamalıyım?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Video 1'den başlayın: Giriş Seviye Edit Eğitimi. Bu video size temel kavramları öğretecektir.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Bir sayfa editleme ne kadar sürer?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yeni başlayanlar için 30-60 dakika/sayfa, orta seviye için 15-30 dakika/sayfa, ileri seviye için 5-15 dakika/sayfa.",
-          },
-        },
-      ],
+      })),
     },
     {
       "@type": "BreadcrumbList",
@@ -218,14 +202,17 @@ const structuredData = {
   ],
 };
 
+const themeInitScript = `(function(){try{var t=localStorage.getItem("mr_theme_v1");if(t)t=JSON.parse(t);if(t==="light")document.documentElement.classList.add("light-theme");else document.documentElement.classList.add("dark-theme");}catch(e){document.documentElement.classList.add("dark-theme");}})();`;
+
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
-    <html lang="tr" className={inter.variable}>
+    <html lang="tr" className={inter.variable} suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="//www.youtube.com" />
         <link rel="dns-prefetch" href="//i.ibb.co" />

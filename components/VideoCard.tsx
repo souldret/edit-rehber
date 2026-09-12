@@ -68,7 +68,7 @@ export default function VideoCard({ src, title, caption }: VideoCardProps) {
               </div>
             )}
             <iframe
-              src={`${src}?loading=lazy`}
+              src={src}
               title={title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
